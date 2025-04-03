@@ -7,17 +7,17 @@ def extract_title(markdown):
         if re.match(r"^# ", line):
             return line.strip("# ")
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath):
     entries = os.listdir(dir_path_content)
     for entry in entries:
         if os.path.isfile(dir_path_content+entry):
             file = entry.split(".")[0] + ".html"
-            generate_page(dir_path_content+entry, template_path, dest_dir_path+file)
+            generate_page(dir_path_content+entry, template_path, dest_dir_path+file, basepath)
         else:
-            generate_pages_recursive(dir_path_content+entry+"/", template_path, dest_dir_path+entry+"/")
+            generate_pages_recursive(dir_path_content+entry+"/", template_path, dest_dir_path+entry+"/", basepath)
 
 
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, basepath):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
     markdown = open(from_path).read()
     template = open(template_path).read()
@@ -25,6 +25,8 @@ def generate_page(from_path, template_path, dest_path):
     title = extract_title(markdown)
     template = template.replace("{{ Title }}", title)
     template = template.replace("{{ Content }}", html)
+    template = template.replace("href=\"/", f"href=\"{basepath}")
+    template = template.replace("src=\"/", f"src=\"{basepath}")
     if not os.path.exists(("/").join(dest_path.split("/")[:-1])):
         os.makedirs(("/").join(dest_path.split("/")[:-1]))
     new_file = open(dest_path, 'a')

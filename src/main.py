@@ -1,12 +1,14 @@
 from textnode import TextNode, TextType
 import os
+import sys
 from shutil import rmtree, copy
 from extract_markdown import generate_page, generate_pages_recursive
 
 def main():
+    basepath = sys.argv[0]
     copy_static_to_public()
     #generate_page("content/index.md", "./template.html", "./public/index.html")
-    generate_pages_recursive("./content/", "./template.html", "./public/")
+    generate_pages_recursive("./content/", "./template.html", "./docs/", basepath)
 
 def copy_static_to_public():
     if os.path.exists("./static/"):
