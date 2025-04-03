@@ -62,8 +62,16 @@ def ul_to_node(ul):
 def paragraph_to_node(para):
     return ParentNode("p", text_to_children(para.replace("\n", " ")))
 
-def quote_to_node(quote):
-    return ParentNode("blockquote", text_to_children(quote))
+def quote_to_node(block):
+    lines = block.split("\n")
+    new_lines = []
+    for line in lines:
+        if not line.startswith(">"):
+            raise ValueError("invalid quote block")
+        new_lines.append(line.lstrip(">").strip())
+    content = " ".join(new_lines)
+    children = text_to_children(content)
+    return ParentNode("blockquote", children)
 
 def heading_to_node(heading):
     heading_level = heading.count("#")
