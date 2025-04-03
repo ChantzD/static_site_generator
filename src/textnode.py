@@ -44,7 +44,6 @@ def text_node_to_html_node(text_node):
         case TextType.LINK:
             return LeafNode("a", text_node.get_text(), {"href": f"{text_node.get_url()}",})
         case TextType.IMAGE:
-            print(f"IMAGE WITH: {text_node.get_url()} and {text_node.get_text}")
             return LeafNode("img", "", {"src": text_node.url, "alt": text_node.text})
         case _:
             raise Exception("Type not in TextType Enum")
